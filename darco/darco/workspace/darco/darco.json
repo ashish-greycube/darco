@@ -1,0 +1,48 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"eS7_fEO-FA\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Darco</span>\",\"col\":12}},{\"id\":\"NP9nC440E-\",\"type\":\"card\",\"data\":{\"card_name\":\"Report\",\"col\":4}}]",
+ "creation": "2024-12-30 15:47:45.901188",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "folder-open",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Darco",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Report",
+   "link_count": 1,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "SO Profit",
+   "link_count": 0,
+   "link_to": "SO Profit",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-12-30 15:50:22.402936",
+ "modified_by": "Administrator",
+ "module": "Darco",
+ "name": "Darco",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 2.0,
+ "shortcuts": [],
+ "title": "Darco"
+}
