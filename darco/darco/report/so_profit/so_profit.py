@@ -43,14 +43,14 @@ def get_columns():
 		},
 		{
 			"fieldname": "total_cost",
-			"label":_("Total Cost"),
+			"label":_("Total Cost"+currency_symbol),
 			"fieldtype": "Currency",
 			"width":'200'
 		},
 		{
 			"fieldname": "profit_amount",
 			"label":_("Profit Amount"+currency_symbol),
-			"fieldtype": "Data",
+			"fieldtype": "Currency",
 			"width":'200'
 		},
 		{
