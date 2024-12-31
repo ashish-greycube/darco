@@ -116,13 +116,11 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Delivery Note": {
+		"after_insert": "darco.api.change_delivery_status_in_si"
+	}
+}
 
 # Scheduled Tasks
 # ---------------
