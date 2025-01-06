@@ -120,9 +120,9 @@ doc_events = {
 	"Delivery Note": {
 		"on_submit": "darco.api.change_delivery_status_in_si"
 	},
-    "Sales Invoice": {
-        "validate": "darco.api.validate_qty_against_available_qty"
-	}
+    # "Sales Invoice": {
+    #     "validate": "darco.api.validate_qty_against_available_qty"
+	# }
 }
 
 # Scheduled Tasks
