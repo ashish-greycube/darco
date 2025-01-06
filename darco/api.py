@@ -16,6 +16,5 @@ def change_delivery_status_in_si(self,method):
 def validate_qty_against_available_qty(self, method):
     if len(self.items)>0:
         for row in self.items:
-            if row.actual_qty:
-                if row.qty > row.actual_qty:
-                    frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
+            if row.qty > row.actual_qty:
+                frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
