@@ -14,7 +14,9 @@ def change_delivery_status_in_si(self,method):
         frappe.msgprint(_("Delivery Status in connected sales invoice is updated"),alert=True)
 
 def validate_qty_against_available_qty(self, method):
-    if len(self.items)>0:
-        for row in self.items:
-            if row.qty > row.actual_qty:
-                frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
+    check_available_qty = frappe.db.get_single_value("Darco Settings","check_available_qty")
+    if check_available_qty == 1:
+        if len(self.items)>0:
+            for row in self.items:
+                if row.qty > row.actual_qty:
+                    frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
