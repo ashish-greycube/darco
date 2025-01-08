@@ -20,3 +20,10 @@ def validate_qty_against_available_qty(self, method):
             for row in self.items:
                 if row.qty > row.actual_qty:
                     frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
+
+def set_payment_amount(self, method):
+    if self.is_return == 1 :
+        if self.total:
+            if len(self.payments)>0:
+                for row in self.payments:
+                    row.amount = self.total

@@ -1,10 +1,10 @@
 frappe.ui.form.on("Sales Invoice", {
-    validate(frm){
-        console.log("111ON start CHANGE")
-        return set_payment_amt(frm)
-        console.log("444end CHANGE")
+    // validate(frm){
+    //     console.log("111ON start CHANGE")
+    //     return set_payment_amt(frm)
+    //     console.log("444end CHANGE")
 
-    }
+    // }
 })
 
 
