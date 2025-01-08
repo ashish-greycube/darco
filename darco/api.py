@@ -26,5 +26,5 @@ def set_payment_amount(self, method):
         if self.total:
             if len(self.payments)>0:
                 for row in self.payments:
-                    if  row.amount < 1:
+                    if  row.amount == 0:
                         row.amount = self.total
