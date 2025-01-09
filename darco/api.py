@@ -28,3 +28,4 @@ def set_payment_amount(self, method):
                 for row in self.payments:
                     if  row.amount == 0:
                         row.amount = self.total
+            self.run_method("before_save")

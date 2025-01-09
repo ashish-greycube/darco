@@ -122,7 +122,7 @@ doc_events = {
 	},
     "Sales Invoice": {
         "validate": "darco.api.validate_qty_against_available_qty",
-        "before_validate": "darco.api.set_payment_amount"
+        "before_save": "darco.api.set_payment_amount",
 	}
 }
 
