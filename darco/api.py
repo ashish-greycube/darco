@@ -22,6 +22,7 @@ def validate_qty_against_available_qty(self, method):
                     frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
 
 def set_payment_amount(self, method):
+    print("Before Validate of ours")
     if self.is_return == 1 :
         if self.total:
             if len(self.payments)>0:
