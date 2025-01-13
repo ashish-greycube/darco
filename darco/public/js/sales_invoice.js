@@ -5,6 +5,10 @@ frappe.ui.form.on("Sales Invoice", {
     //     console.log("444end CHANGE")
 
     // }
+    is_return (frm) {
+        let is_return = frm.doc.is_return
+        frm.set_value("update_stock", is_return)
+    }
 })
 
 

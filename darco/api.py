@@ -18,8 +18,10 @@ def validate_qty_against_available_qty(self, method):
     if check_available_qty == 1:
         if len(self.items)>0:
             for row in self.items:
-                if row.qty > row.actual_qty:
-                    frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
+                maintain_stock = frappe.db.get_value("Item",row.item_code,"is_stock_item")
+                if maintain_stock == 1:
+                    if row.qty > row.actual_qty:
+                        frappe.throw(_("#Row {0} : Qty cannot be greater than available qty {1}".format(row.idx,row.actual_qty)))
 
 def set_payment_amount(self, method):
     print("Before Validate of ours")
