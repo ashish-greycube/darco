@@ -12,7 +12,7 @@ def execute(filters=None):
 	columns, data = [], []
 
 	columns = get_columns(mop)
-	data = get_data(filters, mop)
+	data = get_data(filters, mop, columns)
 	
 	if not data:
 		frappe.msgprint(_("No records found"))
@@ -49,14 +49,14 @@ def get_columns(mop):
 			}
 		]
 	
-	for col in mop:
-		columns.append(
-				{
-				"fieldname": _(col),
-				"label":_(col),
-				"fieldtype": "Currency",
-				"width":'160'
-			})
+	# for col in mop:
+	# 	columns.append(
+	# 			{
+	# 			"fieldname": _(col),
+	# 			"label":_(col),
+	# 			"fieldtype": "Currency",
+	# 			"width":'160'
+	# 		})
 
 	return columns
 
@@ -79,7 +79,7 @@ def get_conditions(filters):
 
 	return conditions
 
-def get_data(filters, mop):
+def get_data(filters, mop, columns):
 	conditions = get_conditions(filters)
 	data = []
 
@@ -149,13 +149,21 @@ def get_data(filters, mop):
 					sip.mode_of_payment""".format(conditions), filters, as_dict=1)
 
 	print(data, '========data')
+	print(mop_data, '========mop_data')
 
 	for main_row in data:
 		for mop_row in mop_data:
 			if main_row.get('warehouse') == mop_row.get('warehouse'):
 				for mop_type in mop:
 					if mop_row.get('mode_of_payment') == mop_type:
-						# print(main_row,'mainrow')
-						main_row.update({_(mop_type): mop_row['mod_amout']})
+						if mop_row['mod_amout'] != 0:
+							columns.append(
+									{
+									"fieldname": _(mop_type),
+									"label":_(mop_type),
+									"fieldtype": "Currency",
+									"width":'160'
+								})
+							main_row.update({_(mop_type): mop_row['mod_amout']})
 
 	return data
