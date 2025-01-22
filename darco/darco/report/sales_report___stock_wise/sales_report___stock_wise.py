@@ -91,17 +91,23 @@ def get_data(filters, mop, columns):
 	})
 
 	report = sales_register_execute(report_filters)
+	print('report-----------------------',report)
 	print(report[1], '===report_data', len(report[1]),type(report[1]))
 	report_data = report[1]
+	if len(report_data) == 0:
+		return data
+	invoice_list=[]
 	for row in report_data:
 		print(type(row), '===row',row)
 		sales_partner = frappe.db.get_value("Sales Invoice", row.get('voucher_no'), "sales_partner")
+		invoice_list.append(row.get('voucher_no'))
 		row['sales_partner'] = sales_partner
 		print(row, '===row')
-
+	
 	total_sales = 0
 	total_return = 0
 	for item in report_data:
+		
 		# print(item, '===item',type(item))
 		if filters.get("sales_partner"):
 			if item.get("sales_partner") == filters.get("sales_partner"):
@@ -187,10 +193,10 @@ def get_data(filters, mop, columns):
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
 				inner join `tabSales Invoice Item` sit on sit.parent = si.name
-				where {0}
+				where si.name in ({0}) and {1}
 				group by
 					sit.warehouse,
-					sip.mode_of_payment""".format(conditions), filters, as_dict=1, debug=1)
+					sip.mode_of_payment""".format(",".join(["%s"] * len(invoice_list)),conditions),tuple(invoice_list),as_dict=True,debug=1)
 
 	print(data, '========data')
 	print(mop_data, '========mop_data')
