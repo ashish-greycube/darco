@@ -133,87 +133,42 @@ def get_data(filters, mop, columns):
 		"total_return": total_return,
 		"net_sales": net_sales
 	})
-	# si = frappe.db.sql("""
-	# 		SELECT
-	# 			IFNULL(sit.warehouse ,'') as warehouse,
-	# 			sum(si.grand_total) as total_sales
-	# 		FROM
-	# 			`tabSales Invoice` si
-	# 		inner join `tabSales Invoice Item` sit on sit.parent = si.name 
-	# 		where
-	# 			{0} and si.is_return = 0 
-	# 		group by
-	# 			sit.warehouse 
-	# 	""".format(conditions), filters, as_dict=1, debug=1)
-	
-	# print(si, "=======si")
-	
-	# return_si = frappe.db.sql("""
-	# 		SELECT
-	# 			sit.parenttype as voucher_type,
-	# 			si.name as voucher_no,
-	# 			IFNULL(sit.warehouse ,'') as warehouse,
-	# 			sum(si.grand_total) as total_return
-	# 		FROM
-	# 			`tabSales Invoice` si
-	# 		inner join `tabSales Invoice Item` sit on sit.parent = si.name 
-	# 		where
-	# 			{0} and si.is_return = 1
-	# 	""".format(conditions), filters, as_dict=1, debug=1)
-	
-	# print(return_si, "===return_si")
 
-	# for row in si:
-	# 	return_si_found = False
-	# 	for credit in return_si:
-	# 		if row.warehouse == credit.warehouse:
-	# 			data.append({
-	# 				"warehouse": row.warehouse,
-	# 				"total_sales": row.total_sales,
-	# 				"total_return": credit.total_return,
-	# 				"net_sales": row.total_sales + credit.total_return
-	# 			})
-	# 			return_si_found = True
-	# 			break
-
-	# 	if return_si_found == False:
-	# 		data.append({
-	# 			"warehouse": row.warehouse,
-	# 			"total_sales": row.total_sales,
-	# 			"total_return": 0,
-	# 			"net_sales": row.total_sales
-	# 		})
-	
-	mop_data = frappe.db.sql("""SELECT
-					IFNULL(sit.warehouse,'') as warehouse,
-					sip.mode_of_payment ,
-					sum(sip.amount) as mod_amout
+	mop_list = frappe.db.sql("""SELECT
+					sip.mode_of_payment
 				FROM
 					`tabSales Invoice` si
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
 				inner join `tabSales Invoice Item` sit on sit.parent = si.name
 				where si.name in ({0}) and {1}
+				and sip.mode_of_payment is not null
 				group by
-					sit.warehouse,
 					sip.mode_of_payment""".format(",".join(["%s"] * len(invoice_list)),conditions),tuple(invoice_list),as_dict=True,debug=1)
-
-	print(data, '========data')
-	print(mop_data, '========mop_data')
-
 	for main_row in data:
-		for mop_row in mop_data:
-			if main_row.get('warehouse') == mop_row.get('warehouse'):
-				for mop_type in mop:
-					if mop_row.get('mode_of_payment') == mop_type:
-						if mop_row['mod_amout'] != 0:
-							columns.append(
-									{
-									"fieldname": _(mop_type),
-									"label":_(mop_type),
-									"fieldtype": "Currency",
-									"width":'160'
-								})
-							main_row.update({_(mop_type): mop_row['mod_amout']})
+		for mop_type in mop_list:
+			mop_type=mop_type.get('mode_of_payment')
+			print(mop_type, '===mop_type')
+			mop_report_filters = frappe._dict({
+				"from_date": filters.get("from_date"),
+				"to_date": filters.get("to_date"),
+				"warehouse": filters.get("warehouse"),
+				"mode_of_payment": mop_type
+			})
+			print(mop_report_filters, '===mop_report_filters')
+			mop_report_data = list(sales_register_execute(mop_report_filters))
+			total_mop_amount=0
+			if len(mop_report_data) > 0 and mop_report_data[1] and len(mop_report_data[1]) > 0:
+				for mop_report_row in mop_report_data[1]:
+					total_mop_amount += mop_report_row.get('grand_total')
+				if total_mop_amount>0:
+					columns.append(
+										{
+										"fieldname": _(mop_type),
+										"label":_(mop_type),
+										"fieldtype": "Currency",
+										"width":'160'
+									})		
+					main_row.update({_(mop_type): total_mop_amount})	
 
 	return data
