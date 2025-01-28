@@ -6,12 +6,15 @@ frappe.ui.form.on("Sales Invoice", {
 
     // }
     onload(frm){
-        if(frm.doc.is_return == 1 && frm.doc.docstatus == 0){
-            frm.set_value("update_stock", 1)
+        if (frm.doc.docstatus == 0) {
+            if(frm.doc.is_return == 1 ){
+                frm.set_value("update_stock", 1)
+            }
+            else{
+                frm.set_value("update_stock", 0)
+            }        
         }
-        else{
-            frm.set_value("update_stock", 0)
-        }
+
     },
     is_return (frm) {
         let is_return = frm.doc.is_return
