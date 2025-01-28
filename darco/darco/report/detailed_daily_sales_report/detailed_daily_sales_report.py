@@ -92,7 +92,7 @@ def get_data(filters):
 		left outer join `tabSales Invoice Item` as sii on
 			si.name = sii.parent
 		where
-			sii.idx = 1 and {conditions}
+			si.docstatus!=2 and sii.idx = 1 and {conditions}
 	""".format(conditions=conditions), as_dict=1)
 
 	if len(data) > 0:

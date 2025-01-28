@@ -6,7 +6,7 @@ frappe.ui.form.on("Sales Invoice", {
 
     // }
     onload(frm){
-        if(frm.doc.is_return == 1){
+        if(frm.doc.is_return == 1 && frm.doc.docstatus == 0){
             frm.set_value("update_stock", 1)
         }
         else{
