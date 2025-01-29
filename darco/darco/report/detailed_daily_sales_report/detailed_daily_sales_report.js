@@ -32,9 +32,11 @@ frappe.query_reports["Detailed Daily Sales Report"] = {
 			"options": "Sales Partner"
 		},
 		{
-			"fieldname": "hide_return",
-			"label":__("Hide Return"),
-			"fieldtype": "Check"
-		}
+			"fieldname": "si_type",
+			"label":__("SI Type"),
+			"fieldtype": "Select",
+			"options": "Both\nOnly Return\nOnly Sales invoice",
+			"default": "Both"
+		},
 	]
 };

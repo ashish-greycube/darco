@@ -119,8 +119,12 @@ def get_conditions(filters):
 
 	if filters.sales_partner:
 		conditions += " and si.sales_partner = '{0}'".format(filters.sales_partner)
-		
-	if filters.hide_return == 1:
+
+	if filters.si_type == "Only Return":
+		conditions += " and si.is_return = 1"
+	elif filters.si_type == "Only Sales invoice":
 		conditions += " and si.is_return = 0"
+	else:
+		conditions += " and si.is_return in (0,1)"
 
 	return conditions
