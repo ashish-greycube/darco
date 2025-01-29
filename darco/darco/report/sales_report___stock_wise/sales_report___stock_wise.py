@@ -47,7 +47,16 @@ def get_columns(mop):
 				"label":_("Net Sales"),
 				"fieldtype": "Currency",
 				"width":'200'
-			}
+			},
+			{
+				"fieldname": "outstanding_amount",
+				"label":_("Outstanding"),
+				"fieldtype": "Currency",
+				"width":'200'
+			}			
+
+
+			
 		]
 	
 	# for col in mop:
@@ -106,6 +115,7 @@ def get_data(filters, mop, columns):
 	
 	total_sales = 0
 	total_return = 0
+	total_outstanding_amount = 0
 	for item in report_data:
 		
 		# print(item, '===item',type(item))
@@ -125,17 +135,19 @@ def get_data(filters, mop, columns):
 				print(item.get("net_total"), '===',1)
 				total_return += item.get("net_total")
 				print(total_return)
+		total_outstanding_amount += item.get("outstanding_amount")
 
 	net_sales = total_sales + total_return
 	data.append({
 		"warehouse": filters.get("warehouse"),
 		"total_sales": total_sales,
 		"total_return": total_return,
-		"net_sales": net_sales
+		"net_sales": net_sales,
+		"outstanding_amount": total_outstanding_amount
 	})
 
 	mop_list = frappe.db.sql("""SELECT
-					sip.mode_of_payment
+					sip.mode_of_payment,sum(sip.amount) as mop_amount
 				FROM
 					`tabSales Invoice` si
 				left outer join `tabSales Invoice Payment` sip on
@@ -147,28 +159,30 @@ def get_data(filters, mop, columns):
 					sip.mode_of_payment""".format(",".join(["%s"] * len(invoice_list)),conditions),tuple(invoice_list),as_dict=True,debug=1)
 	for main_row in data:
 		for mop_type in mop_list:
-			mop_type=mop_type.get('mode_of_payment')
 			print(mop_type, '===mop_type')
-			mop_report_filters = frappe._dict({
-				"from_date": filters.get("from_date"),
-				"to_date": filters.get("to_date"),
-				"warehouse": filters.get("warehouse"),
-				"mode_of_payment": mop_type
-			})
-			print(mop_report_filters, '===mop_report_filters')
-			mop_report_data = list(sales_register_execute(mop_report_filters))
-			total_mop_amount=0
-			if len(mop_report_data) > 0 and mop_report_data[1] and len(mop_report_data[1]) > 0:
-				for mop_report_row in mop_report_data[1]:
-					total_mop_amount += mop_report_row.get('grand_total')
-				if total_mop_amount>0:
-					columns.append(
-										{
-										"fieldname": _(mop_type),
-										"label":_(mop_type),
-										"fieldtype": "Currency",
-										"width":'160'
-									})		
-					main_row.update({_(mop_type): total_mop_amount})	
+			mop_type_value=mop_type.get('mode_of_payment')
+			# print(mop_type, '===mop_type')
+			# mop_report_filters = frappe._dict({
+			# 	"from_date": filters.get("from_date"),
+			# 	"to_date": filters.get("to_date"),
+			# 	"warehouse": filters.get("warehouse"),
+			# 	"mode_of_payment": mop_type_value
+			# })
+			# print(mop_report_filters, '===mop_report_filters')
+			# mop_report_data = list(sales_register_execute(mop_report_filters))
+			# total_mop_amount=0
+			# if len(mop_report_data) > 0 and mop_report_data[1] and len(mop_report_data[1]) > 0:
+			# 	for mop_report_row in mop_report_data[1]:
+			# 		total_mop_amount += mop_report_row.get('grand_total')
+			# 	if total_mop_amount>0:
+
+			columns.append(
+								{
+								"fieldname": _(mop_type_value),
+								"label":_(mop_type_value),
+								"fieldtype": "Currency",
+								"width":'160'
+							})		
+			main_row.update({_(mop_type_value): mop_type.get('mop_amount')})	
 
 	return data
