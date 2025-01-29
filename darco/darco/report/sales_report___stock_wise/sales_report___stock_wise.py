@@ -150,11 +150,13 @@ def get_data(filters, mop, columns):
 					sip.mode_of_payment,sum(sip.amount) as mop_amount
 				FROM
 					`tabSales Invoice` si
+				left outer join `tabSales Invoice Item` as sii on
+					si.name = sii.parent						  
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
 				inner join `tabSales Invoice Item` sit on sit.parent = si.name
 				where si.name in ({0}) and {1}
-				and sip.mode_of_payment is not null
+				and sip.amount != 0 and si.docstatus!=2
 				group by
 					sip.mode_of_payment""".format(",".join(["%s"] * len(invoice_list)),conditions),tuple(invoice_list),as_dict=True,debug=1)
 	for main_row in data:
