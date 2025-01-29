@@ -119,6 +119,8 @@ def get_data(filters, mop, columns):
 					sip.parent as sales_invoice_no
 				FROM
 					`tabSales Invoice` si
+			left outer join `tabSales Invoice Item` as sii on
+				si.name = sii.parent						  
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
 				where {0} and sip.amount != 0 and si.docstatus!=2""".format(conditions), filters, as_dict=1)
@@ -128,6 +130,8 @@ def get_data(filters, mop, columns):
 				sip.mode_of_payment
 			FROM
 				`tabSales Invoice` si
+			left outer join `tabSales Invoice Item` as sii on
+				si.name = sii.parent						  
 			left outer join `tabSales Invoice Payment` sip on
 				si.name = sip.parent
 			where {0} and sip.amount != 0 and si.docstatus!=2
