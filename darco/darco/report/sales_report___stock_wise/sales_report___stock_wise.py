@@ -150,7 +150,7 @@ def get_data(filters, mop, columns):
 					sip.mode_of_payment,sum(sip.amount) as mop_amount
 				FROM
 					`tabSales Invoice` si
-				left outer join `tabSales Invoice Item` as sit on
+				inner join `tabSales Invoice Item` as sit on
 					si.name = sit.parent						  
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
