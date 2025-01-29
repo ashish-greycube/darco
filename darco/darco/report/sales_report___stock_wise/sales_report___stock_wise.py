@@ -154,7 +154,6 @@ def get_data(filters, mop, columns):
 					si.name = sii.parent						  
 				left outer join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
-				inner join `tabSales Invoice Item` sit on sit.parent = si.name
 				where si.name in ({0}) and {1}
 				and sip.amount != 0 and si.docstatus!=2
 				group by
