@@ -119,23 +119,23 @@ def get_data(filters, mop, columns):
 					sip.parent as sales_invoice_no
 				FROM
 					`tabSales Invoice` si
-			left outer join `tabSales Invoice Item` as sii on
+			inner join `tabSales Invoice Item` as sii on
 				si.name = sii.parent						  
-				left outer join `tabSales Invoice Payment` sip on
+				inner join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
-				where {0} and sip.amount != 0 and si.docstatus!=2""".format(conditions), filters, as_dict=1)
+				where {0} and sip.amount != 0 and si.docstatus!=2 and sii.idx=1 """.format(conditions), filters, as_dict=1, debug=1)
 	
-
+	print('conditions',conditions)
 	mop_list = frappe.db.sql("""SELECT
 				sip.mode_of_payment
 			FROM
 				`tabSales Invoice` si
-			left outer join `tabSales Invoice Item` as sii on
+			inner join `tabSales Invoice Item` as sii on
 				si.name = sii.parent						  
-			left outer join `tabSales Invoice Payment` sip on
+			inner join `tabSales Invoice Payment` sip on
 				si.name = sip.parent
-			where {0} and sip.amount != 0 and si.docstatus!=2
-			group by sip.mode_of_payment""".format(conditions), filters, as_dict=1, debug=1)
+			where {0} and sip.amount != 0 and si.docstatus!=2 and sii.idx=1 
+			group by sip.mode_of_payment""".format(conditions), filters, as_dict=1, debug=0)
 	
 
 	print(mop_list, "=======mop_list")
@@ -149,14 +149,16 @@ def get_data(filters, mop, columns):
 						"fieldtype": "Currency",
 						"width":'160'
 					})
-
+	my_mop_value=0
 	for main_row in data:
 		for mop_row in mop_data:
 			for mop_type in mop_list:
 				mop_col =  mop_type.get('mode_of_payment')
 				if mop_row.get('mode_of_payment') == mop_col and mop_row.get('sales_invoice_no') == main_row.get('sales_invoice_no'):
 					main_row.update({_(mop_col): mop_row['mod_amout']})
-
+					if mop_row.get('mode_of_payment') == 'شبكه بنك الراجحي الرئيسي':
+						my_mop_value += mop_row['mod_amout']
+	print(my_mop_value, "=======my_mop_value")
 	return data
 
 def get_conditions(filters):

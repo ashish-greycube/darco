@@ -82,7 +82,7 @@ def get_conditions(filters):
 			frappe.throw(_("To Date should be greater then From Date"))
 	
 	if filters.warehouse:
-		conditions += " and sit.warehouse = '{0}'".format(filters.warehouse)
+		conditions += " and sii.warehouse = '{0}'".format(filters.warehouse)
 
 	# if filters.sales_partner:
 	# 	conditions += " and si.sales_partner = '{0}'".format(filters.sales_partner)
@@ -147,15 +147,15 @@ def get_data(filters, mop, columns):
 	})
 
 	mop_list = frappe.db.sql("""SELECT
-					sip.mode_of_payment,sum(sip.amount) as mop_amount
+					sip.mode_of_payment,sum(sip.amount) as mop_amount,count(si.name) as invoice_count
 				FROM
 					`tabSales Invoice` si
-				inner join `tabSales Invoice Item` as sit on
-					si.name = sit.parent						  
-				left outer join `tabSales Invoice Payment` sip on
+				inner join `tabSales Invoice Item` as sii on
+					si.name = sii.parent						  
+				inner join `tabSales Invoice Payment` sip on
 					si.name = sip.parent
 				where si.name in ({0}) and {1}
-				and sip.amount != 0 and si.docstatus!=2
+				and sip.amount != 0 and si.docstatus!=2 and sii.idx=1 and sip.mode_of_payment is not NULL
 				group by
 					sip.mode_of_payment""".format(",".join(["%s"] * len(invoice_list)),conditions),tuple(invoice_list),as_dict=True,debug=1)
 	for main_row in data:
