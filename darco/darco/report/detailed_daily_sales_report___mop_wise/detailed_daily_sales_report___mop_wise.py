@@ -78,6 +78,12 @@ def get_columns(mop):
 				"fieldtype": "Select",
 				"options": "Yes\nNo",
 				"width":'100'
+			},
+			{
+				"fieldname": "outstanding_amount",
+				"label":_("Outstanding Amount"),
+				"fieldtype": "Currency",
+				"width":'100'
 			}
 		]
 	
@@ -100,6 +106,7 @@ def get_data(filters, mop, columns):
 				SELECT
 			si.posting_date as date,
 			si.name as sales_invoice_no,
+			si.outstanding_amount,
 			si.customer_name ,
 			si.grand_total ,
 			si.sales_partner,
