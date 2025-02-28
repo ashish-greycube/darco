@@ -32,3 +32,14 @@ def set_payment_amount(self, method):
                     if  row.amount == 0:
                         row.amount = self.total
             self.run_method("before_save")
+        
+def validate_mop_amount(self,method):
+    total_mop_amount = 0
+    if len(self.payments)>0:
+        for row in self.payments:
+            total_mop_amount = total_mop_amount + row.amount
+        
+    if self.total:
+        if self.is_return == 0:
+            if self.total < total_mop_amount:
+                frappe.throw(_("Total of Mode of Payment amount cannot be greater than {0}".format(self.total)))

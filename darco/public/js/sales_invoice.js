@@ -19,6 +19,11 @@ frappe.ui.form.on("Sales Invoice", {
     is_return (frm) {
         let is_return = frm.doc.is_return
         frm.set_value("update_stock", is_return)
+        if (is_return == 1){
+            if (frm.doc.is_pos == 0){
+                frm.set_value("payments",[])
+            }
+        }
     }
 })
 
