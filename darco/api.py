@@ -39,7 +39,7 @@ def validate_mop_amount(self,method):
         for row in self.payments:
             total_mop_amount = total_mop_amount + row.amount
         
-    if self.total:
+    if self.net_total:
         if self.is_return == 0:
-            if self.total < total_mop_amount:
-                frappe.throw(_("Total of Mode of Payment amount cannot be greater than {0}".format(self.total)))
+            if self.net_total < total_mop_amount:
+                frappe.throw(_("Total of Mode of Payment amount cannot be greater than {0}".format(self.net_total)))
