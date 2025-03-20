@@ -12,7 +12,7 @@ frappe.ui.form.on("Sales Invoice", {
             }
             else{
                 frm.set_value("update_stock", 0)
-            }        
+            }
         }
 
     },
@@ -49,8 +49,6 @@ function empty_payment_table(frm){
     if (is_pos == 0){
         frm.set_value("payments",[])
     }
-    let is_return = frm.doc.is_return
-    frm.set_value("update_stock", is_return)
 }
 
 frappe.ui.form.on("Sales Invoice Item", {
@@ -70,8 +68,8 @@ function set_amount_zero_in_payment(frm){
         if (frm.is_new()){
             if (frm.doc.payments.length > 0){
                 frappe.model.set_value(frm.doc.payments[0].doctype, frm.doc.payments[0].name, "amount", 0)
+                frappe.show_alert('Set amount in Payments table manually', 5);
             }
         }
-    }, 100);
-    frappe.show_alert('Set amount in Payments table manually', 5);
+    }, 1000);
 }
