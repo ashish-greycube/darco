@@ -121,8 +121,8 @@ doc_events = {
 		"on_submit": "darco.api.change_delivery_status_in_si"
 	},
     "Sales Invoice": {
-        "validate": ["darco.api.validate_qty_against_available_qty",
-                     "darco.api.validate_mop_amount"],
+        "validate": ["darco.api.validate_qty_against_available_qty"],
+        "before_submit": "darco.api.validate_mop_amount",
         "before_validate": "darco.api.set_payment_amount",
 	}
 }

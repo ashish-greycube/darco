@@ -34,6 +34,16 @@ def set_payment_amount(self, method):
             self.run_method("before_save")
         
 def validate_mop_amount(self,method):
+    if self.is_pos == 1:
+        print("Is POS",len(self.payments))
+        if len(self.payments)>0:
+            print("Payments")
+            total_mop_amount = 0
+            for row in self.payments:
+                total_mop_amount = total_mop_amount + row.amount
+                print("Total MOP Amount",total_mop_amount)
+            if total_mop_amount == 0:
+                frappe.throw(_("Total of Mode of Payment amount cannot be zero"))
     total_mop_amount = 0
     if len(self.payments)>0:
         for row in self.payments:
