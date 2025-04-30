@@ -71,5 +71,5 @@ function set_amount_zero_in_payment(frm){
                 frappe.show_alert('Set amount in Payments table manually', 5);
             }
         }
-    }, 1000);
+    }, 3000);
 }
