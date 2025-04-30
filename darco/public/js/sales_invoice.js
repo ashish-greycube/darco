@@ -67,9 +67,11 @@ function set_amount_zero_in_payment(frm){
     setTimeout(() => {
         if (frm.is_new()){
             if (frm.doc.payments.length > 0){
-                frappe.model.set_value(frm.doc.payments[0].doctype, frm.doc.payments[0].name, "amount", 0)
+                for(let row of frm.doc.payments){
+                    frappe.model.set_value(row.doctype, row.name, "amount", 0)
+                }
                 frappe.show_alert('Set amount in Payments table manually', 5);
             }
         }
-    }, 3000);
+    }, 1000);
 }
