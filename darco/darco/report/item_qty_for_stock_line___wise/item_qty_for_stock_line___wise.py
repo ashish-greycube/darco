@@ -3,7 +3,6 @@
 
 import frappe
 from frappe import _
-from erpnext.stock.dashboard.item_dashboard import get_data as item_dashboard
 
 def execute(filters=None):
 	if not filters: filters = {}
@@ -80,9 +79,18 @@ def get_data(filters, warehouse):
 					""".format(conditions), filters, as_dict=1,)
 	
 	for row in data:
-		item_details = item_dashboard(row.item_code)
+		item_details = frappe.db.get_all( "Bin",
+				fields=[
+					"item_code",
+					"warehouse",
+					"actual_qty",
+				],
+				filters={
+					'item_code': row.item_code
+				},
+			)
 
-		if item_details:
+		if len(item_details) > 0:
 			for detail in item_details:
 				for col in warehouse:
 					if _(col) == detail.warehouse:
