@@ -124,7 +124,10 @@ doc_events = {
         "validate": ["darco.api.validate_qty_against_available_qty"],
         "before_submit": "darco.api.validate_mop_amount",
         "before_validate": "darco.api.set_payment_amount",
-	}
+	},
+    "Purchase Invoice": {
+        "validate": "darco.api.validate_purchase_inovoice_item_rate"
+    }
 }
 
 # Scheduled Tasks

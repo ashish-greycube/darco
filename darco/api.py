@@ -53,3 +53,9 @@ def validate_mop_amount(self,method):
         if self.is_return == 0:
             if self.total < total_mop_amount:
                 frappe.throw(_("Total of Mode of Payment amount cannot be greater than {0}".format(self.total)))
+
+def validate_purchase_inovoice_item_rate(self, method):
+    if len(self.items) > 0:
+        for row in self.items:
+            if row.rate == 0 or row.rate == None:
+                frappe.throw(_("Item Table Row {0} : Rate cannot be zero".format(row.idx)))
