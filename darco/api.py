@@ -55,7 +55,9 @@ def validate_mop_amount(self,method):
                 frappe.throw(_("Total of Mode of Payment amount cannot be greater than {0}".format(self.total)))
 
 def validate_purchase_inovoice_item_rate(self, method):
-    if len(self.items) > 0:
-        for row in self.items:
-            if row.rate == 0 or row.rate == None:
-                frappe.throw(_("Item Table Row {0} : Rate cannot be zero".format(row.idx)))
+    item_rate_greater_than_zero = frappe.db.get_single_value("Darco Settings","pi_item_rate_greater_than_zero")
+    if item_rate_greater_than_zero == 1:
+        if len(self.items) > 0:
+            for row in self.items:
+                if row.rate == 0 or row.rate == None:
+                    frappe.throw(_("Item Table Row {0} : Rate cannot be zero".format(row.idx)))
